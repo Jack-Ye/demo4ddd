@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: demo4ddd
+  profiles:
+    active: dev
+
+server:
+  port: 8080

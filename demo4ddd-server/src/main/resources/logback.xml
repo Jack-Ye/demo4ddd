@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <property name="FILE_PATTERN" value="%d [%t] %5p %c - %m%n"/>
+    <property name="PATH" value="./logs/demo4ddd"/>
+
+    <springProperty scope="context" name="appName" source="spring.com.demo.demo4ddd.application.name"/>
+
+    <!-- 控制台输出 -->
+    <appender name="SQL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/sql.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/archive/sql.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder charset="UTF-8">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="DEMO4DDD_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${PATH}/demo4ddd.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${PATH}/archive/demo4ddd.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+        <encoder class="com.demo.ostrich.logback.OstrichJsonLayoutEncoder" />
+    </appender>
+
+    <!-- IBatis日志输出 -->
+    <logger name="org.apache.ibatis" level="WARN" additivity="false">
+        <appender-ref ref="SQL_LOG"/>
+    </logger>
+
+    <logger name="java.sql" level="INFO" additivity="false">
+        <appender-ref ref="SQL_LOG"/>
+    </logger>
+
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="DEMO4DDD_LOG"/>
+        <appender-ref ref="SQL_LOG"/>
+    </root>
+
+</configuration>
